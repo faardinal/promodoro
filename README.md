@@ -1,20 +1,8 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+URL : https://promoodoro.vercel.app/
 
-# Run and deploy your AI Studio app
+Pomodoro Web App
+A simple, fast, and distraction-free Pomodoro timer web application to help you stay focused and manage your time effectively.
 
-This contains everything you need to run your app locally.
+📸 Preview
+<img width="1916" height="893" alt="image" src="https://github.com/user-attachments/assets/c9d5af1e-f51b-40e3-8a00-04dfd2224686" />
 
-View your app in AI Studio: https://ai.studio/apps/149e3c4e-5466-477a-9994-014bf445b411
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
