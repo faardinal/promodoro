@@ -27,10 +27,10 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             opacity: 0,
             transition: { duration: 1, ease: [0.4, 0, 0.2, 1] } 
           }}
-          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/30 backdrop-blur-[40px] pointer-events-none"
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-white/10 backdrop-blur-[40px] grayscale pointer-events-none"
         >
           {/* Subtle Darkening Overlay for Depth */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/40" />
+          <div className="absolute inset-0 bg-black/40" />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.85, filter: 'blur(15px)' }}
@@ -55,14 +55,14 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
             className="relative flex flex-col items-center"
           >
             {/* Elegant Minimal Accents */}
-            <div className="w-16 h-[0.5px] bg-white/10 mb-8" />
+            <div className="w-16 h-[0.5px] bg-white/20 mb-8" />
 
             {/* Logo Text - Minimal Monochrome */}
-            <h1 className="text-2xl md:text-3xl font-light tracking-[0.5em] text-white/95 uppercase select-none">
+            <h1 className="text-2xl md:text-3xl font-light tracking-[0.5em] text-white select-none">
               Prodoro
             </h1>
 
-            <div className="w-16 h-[0.5px] bg-white/10 mt-8" />
+            <div className="w-16 h-[0.5px] bg-white/20 mt-8" />
             
             {/* Soft Ambient Shadow Overlay */}
             <div className="absolute inset-0 -z-10 blur-3xl bg-white/5 rounded-full scale-150" />

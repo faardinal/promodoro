@@ -20,6 +20,7 @@ import Shop from './components/UI/Shop';
 import AudioMenu from './components/UI/AudioMenu';
 import StatsModal from './components/UI/StatsModal';
 import SplashScreen from './components/UI/SplashScreen';
+import TimerSettingsModal from './components/UI/TimerSettingsModal';
 import { audioService } from './services/audioService';
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
     environment,
     cycleTimeOfDay,
     resetToRealTime,
+    updateTimerSettings,
     isGhostEventActive
   } = useGameStore();
 
@@ -48,6 +50,7 @@ export default function App() {
   const [isAudioOpen, setIsAudioOpen] = useState(false);
   const [isTodoOpen, setIsTodoOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
+  const [isTimerSettingsOpen, setIsTimerSettingsOpen] = useState(false);
   const [showCompletionPulse, setShowCompletionPulse] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   
@@ -62,6 +65,8 @@ export default function App() {
   const toggleTodo = useCallback(() => setIsTodoOpen(prev => !prev), []);
   const openStats = useCallback(() => setIsStatsOpen(true), []);
   const closeStats = useCallback(() => setIsStatsOpen(false), []);
+  const openTimerSettings = useCallback(() => setIsTimerSettingsOpen(true), []);
+  const closeTimerSettings = useCallback(() => setIsTimerSettingsOpen(false), []);
 
   const prevIsActive = useRef(gameState.isActive);
   const prevSessionType = useRef(gameState.sessionType);
@@ -121,6 +126,7 @@ export default function App() {
             timeLeft={gameState.timeLeft} 
             sessionType={gameState.sessionType} 
             clockStyle={gameState.stats.activeItems.clock_style}
+            onClick={openTimerSettings}
           />
           
           <Table />
@@ -208,6 +214,12 @@ export default function App() {
             onClose={closeStats}
           />
         )}
+        <TimerSettingsModal 
+          isOpen={isTimerSettingsOpen}
+          onClose={closeTimerSettings}
+          settings={gameState.stats.timerSettings}
+          onUpdate={updateTimerSettings}
+        />
       </AnimatePresence>
 
       <AnimatePresence>

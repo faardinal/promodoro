@@ -31,6 +31,11 @@ const INITIAL_STATS: UserStats = {
   unlockedItems: ['rainy_night'],
   isMuted: false,
   audioSettings: INITIAL_AUDIO,
+  timerSettings: {
+    focus: FOCUS_TIME,
+    shortBreak: SHORT_BREAK_TIME,
+    longBreak: LONG_BREAK_TIME,
+  },
   activeItems: {
     background: 'rainy_night',
   },
@@ -89,7 +94,7 @@ export function useGameStore() {
   const [gameState, setGameState] = useState<GameState>(() => {
     const saved = localStorage.getItem(SAVE_KEY);
     const defaults = {
-      timeLeft: FOCUS_TIME,
+      timeLeft: INITIAL_STATS.timerSettings.focus,
       isActive: false,
       sessionType: SessionType.FOCUS,
       sessionCount: 0,
@@ -162,6 +167,10 @@ export function useGameStore() {
             ...savedAudio,
             toggles: currentToggles,
             isPlaying: savedAudio.isPlaying !== undefined ? savedAudio.isPlaying : true
+          },
+          timerSettings: {
+            ...INITIAL_STATS.timerSettings,
+            ...(parsed.stats?.timerSettings || {}),
           },
           activeItems: {
             ...INITIAL_STATS.activeItems,
@@ -296,7 +305,7 @@ export function useGameStore() {
 
   const getNextSessionState = (prev: GameState) => {
     let nextType = SessionType.FOCUS;
-    let nextTime = FOCUS_TIME;
+    let nextTime = prev.stats.timerSettings.focus;
     let coinsEarned = 0;
     let nextSessionCount = prev.sessionCount;
     let newStats = { ...prev.stats };
@@ -345,14 +354,14 @@ export function useGameStore() {
 
       if (nextSessionCount % 4 === 0) {
         nextType = SessionType.LONG_BREAK;
-        nextTime = LONG_BREAK_TIME;
+        nextTime = prev.stats.timerSettings.longBreak;
       } else {
         nextType = SessionType.SHORT_BREAK;
-        nextTime = SHORT_BREAK_TIME;
+        nextTime = prev.stats.timerSettings.shortBreak;
       }
     } else {
       nextType = SessionType.FOCUS;
-      nextTime = FOCUS_TIME;
+      nextTime = prev.stats.timerSettings.focus;
     }
 
     return {
@@ -412,9 +421,9 @@ export function useGameStore() {
         triggerGhostEvent();
       }
 
-      let time = FOCUS_TIME;
-      if (prev.sessionType === SessionType.SHORT_BREAK) time = SHORT_BREAK_TIME;
-      if (prev.sessionType === SessionType.LONG_BREAK) time = LONG_BREAK_TIME;
+      let time = prev.stats.timerSettings.focus;
+      if (prev.sessionType === SessionType.SHORT_BREAK) time = prev.stats.timerSettings.shortBreak;
+      if (prev.sessionType === SessionType.LONG_BREAK) time = prev.stats.timerSettings.longBreak;
       return { ...prev, timeLeft: time, isActive: false };
     });
   }, [triggerGhostEvent]);
@@ -554,6 +563,33 @@ export function useGameStore() {
     }));
   };
 
+  const updateTimerSettings = (settings: Partial<UserStats['timerSettings']>) => {
+    setGameState(prev => {
+      const newSettings = { ...prev.stats.timerSettings, ...settings };
+      
+      // If updating the current session type's duration and timer is NOT active, update timeLeft too
+      let newTimeLeft = prev.timeLeft;
+      if (!prev.isActive) {
+        if (prev.sessionType === SessionType.FOCUS && settings.focus !== undefined) {
+          newTimeLeft = settings.focus;
+        } else if (prev.sessionType === SessionType.SHORT_BREAK && settings.shortBreak !== undefined) {
+          newTimeLeft = settings.shortBreak;
+        } else if (prev.sessionType === SessionType.LONG_BREAK && settings.longBreak !== undefined) {
+          newTimeLeft = settings.longBreak;
+        }
+      }
+
+      return {
+        ...prev,
+        timeLeft: newTimeLeft,
+        stats: {
+          ...prev.stats,
+          timerSettings: newSettings
+        }
+      };
+    });
+  };
+
   return {
     gameState,
     toggleTimer,
@@ -563,6 +599,7 @@ export function useGameStore() {
     equipItem,
     toggleMute,
     setAudioSettings,
+    updateTimerSettings,
     interactWithCat,
     addTask,
     toggleTask,

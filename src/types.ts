@@ -75,6 +75,11 @@ export interface UserStats {
   unlockedItems: string[];
   isMuted: boolean;
   audioSettings: AudioSettings;
+  timerSettings: {
+    focus: number; // in seconds
+    shortBreak: number; // in seconds
+    longBreak: number; // in seconds
+  };
   activeItems: {
     cat_hat?: string;
     mug_skin?: string;
